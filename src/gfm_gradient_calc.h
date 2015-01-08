@@ -4,8 +4,11 @@
 #include <vector>
 #include "dataset.h"
 #include "gradient_calc.h"
+#include "gflags/gflags.h"
 
 typedef double Real;
+
+DECLARE_bool(pos_weighting);
 
 class GfmGradientCalc : public GradientCalc {
   protected:
@@ -20,23 +23,19 @@ class GfmGradientCalc : public GradientCalc {
     double epsilon; // for calculate graident and avoid overflow
     double groupLambda;
     double groupLassoLoss;
-    double logloss;
-    double l2loss;
   public:
     GfmGradientCalc(const Problem* _data,double _intercept = 0):GradientCalc(_data,_intercept){
         epsilon = 1e-8;
         groupLambda = 1;
     }
-    virtual double calc_test_auc(const Problem& dataset);
+    virtual AucUti& test_data(const Problem& dataset);
     void set_epsilon(double _epsilon){
         epsilon = _epsilon;
     }
     void set_group_lambda(double lambda){
         groupLambda = lambda;
     }
-    double get_logloss()const{    return logloss;   }
     double get_group_lasso_loss()const{    return groupLassoLoss;   }
-    double get_l2loss()const{    return l2loss;    }
     void init_factor_info(const Real *_parameter,uint32_t latent_factor_dimension,const std::vector<uint32_t>& _groupDimension){
         latentSpaceDimension = latent_factor_dimension;
         parameter = _parameter;
@@ -50,6 +49,7 @@ class GfmGradientCalc : public GradientCalc {
             return false;
         }
         activeGroup = _group;
+        return true;
     }
     virtual uint32_t get_parameter_size()const{
         if(0 == activeGroup){
@@ -57,6 +57,8 @@ class GfmGradientCalc : public GradientCalc {
         }
         return groupDimension[0] + latentSpaceDimension * groupDimension[activeGroup];
     }
+    virtual double operator()(const Real *w, std::vector<uint32_t>& g_index, double& g_val);
+    virtual double operator()(const Real *w, std::map<uint32_t,double>& g_dict);
     virtual double operator()(const Real *w, Real * g);
     virtual ~GfmGradientCalc(){
         //GradientCalc::~GradientCalc();

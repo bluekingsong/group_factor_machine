@@ -43,6 +43,7 @@ struct Problem{
     uint64_t get_instance_num()const{
         return l;
     }
+    void shuffle();
     void free_memory(){
         if(y) delete[] y;
         if(weight) delete[] weight;

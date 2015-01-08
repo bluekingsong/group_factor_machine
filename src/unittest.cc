@@ -6,10 +6,10 @@
 
 
 int main(int argc,char **argv){
-    GfmGradientCalc::unittest();
-    return 0;
-    if(argc != 2){
-        std::cerr<<"usage:"<<argv[0]<<" binary_file"<<std::endl;
+    //GfmGradientCalc::unittest();
+    //return 0;
+    if(argc != 3){
+        std::cerr<<"usage:"<<argv[0]<<" binary_file line_to_print"<<std::endl;
         return 1;
     }
     //Problem dataset = read_problem("feature_id.smp");
@@ -24,7 +24,7 @@ int main(int argc,char **argv){
         std::cerr<<"[ERR] read failed."<<std::endl;
         return 1;
     }
-    Problem::list_problem_struct(dataset,0);
+    Problem::list_problem_struct(dataset,std::atoi(argv[2]));
     dataset.free_memory();
     return 0;
 }

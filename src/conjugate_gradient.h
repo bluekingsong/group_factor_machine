@@ -16,7 +16,9 @@ struct CGPara{
 };
 class CGSolver{
   public:
-    CGSolver(const MatVecProduct *_matVecProduct, uint32_t vec_len):matVecProduct(_matVecProduct),n(vec_len){
+    CGSolver(const MatVecProduct *_matVecProduct, uint32_t vec_len){
+        matVecProduct = _matVecProduct;
+        n = vec_len;
     }
     void solve(Real *x, const CGPara& cgPara, const Real *b, double bFactor = 1);
     void set_memory(Real *_r, Real *_p, Real *_y){

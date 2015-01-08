@@ -49,6 +49,9 @@ double GradientCalc::operator()(const Real *w, Real * g){
 */
     return 0.0;
 }
+double GradientCalc::operator()(const Real *w, std::map<uint32_t,double>& g_dict){
+    return 0.0;
+}
 GradientCalc* GradientCalc::unittest(const Problem* _data){
 /*
  * w[0,1,2,3]=0, w[4]=1 , intercept=0;
@@ -100,7 +103,7 @@ GradientCalc* GradientCalc::unittest(const Problem* _data){
         assert(std::abs(g[i] - targets[i]) < 1e-12);
     }
     double p_target[] = {0.5,0.5,0.5,t,t,0.5,0.5,t,0.5,t};
-    for(int i = 0; i < _data->get_instance_num(); ++i){
+    for(uint32_t i = 0; i < _data->get_instance_num(); ++i){
         assert(std::abs(p_target[i] - p[i]) < 1e-6);
     }
     delete []mem;

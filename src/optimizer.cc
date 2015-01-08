@@ -6,6 +6,10 @@
 #include "vec_op.h"
 #include "log.h"
 
+DEFINE_bool(fitIntercept,false,"fitIntercept?");
+DEFINE_double(Intercept,0,"intercept,if fitIntercept set to true,this is value has no effect");
+DEFINE_double(l2,1e5,"l2");
+
 std::string Optimizer::make_monitor_str() const{
     std::stringstream ss;
     time_t now = time(0);
@@ -40,8 +44,8 @@ void Optimizer::common_update(uint32_t dataAccessFactor){
 }
 void Optimizer::post_optimize(){
     std::cout<<"[Report]:"<<make_monitor_str()<<std::endl<<std::flush;
-    delete linearSearch;
-    delete []w;
+    if(linearSearch)    delete linearSearch;
+    if(w)    delete []w;
 }
 bool Optimizer::check_stop_condition(double fNew){
   ++numIter;

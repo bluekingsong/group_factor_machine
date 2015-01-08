@@ -55,22 +55,6 @@ void GradientDescent::prepare_optimize(GradientCalc* _gradientCalc,const Real* i
     linearSearch->set_memory(mem + 2 * n + numData, mem + 2 * n + numData + n);
 }
 
-void GradientDescent::prepare_optimize(const Problem* data){
-    n = data->get_parameter_size();
-    numData = data->get_instance_size();
-    Real *mem = new Real[2 * n + numData + 2 * n];
-    // self memory=3*n[w,g,d] + l
-    w = mem;
-    std::memset(w,0,sizeof(Real) * n); // init
-    g = mem + n;
-    d = 0;
-    // memory=numData +1 [ predict prob, funcVal]
-    gradientCalc = new GradientCalc(data);
-    gradientCalc->set_memory(mem + 2 * n);
-    // memory=2*n[xp,gp]
-    linearSearch = new LinearSearch(gradientCalc);
-    linearSearch->set_memory(mem + 2 * n + numData, mem + 2 * n + numData + n);
-}
 std::string GradientDescent::report_algo_para()const{
     std::stringstream ss;
     ss<<"algo="<<optAlgoName<<","<<optimizePara.report()<<",memory="<<(sizeof(Real)*(4*n+numData)>>30)<<"G";

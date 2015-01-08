@@ -106,26 +106,6 @@ void LBFGS::prepare_optimize(GradientCalc *_gradientCalc,const Real *initalPara)
     alpha = s + 2*n*m + m; //new double[m];
 }
 
-void LBFGS::prepare_optimize(const Problem* data){
-    n = data->n;
-    numData = data->l;
-    Real *mem = new Real[3 * n + numData + 2 * n + 2*n*m + 2*m];
-    // self memory=3*n[w,g,d] + l
-    w = mem;
-    std::memset(w,0,sizeof(Real) * n); // init
-    g = mem + n;
-    d = mem + 2*n;
-    // memory=numData +1 [ predict prob, funcVal]
-    gradientCalc = new GradientCalc(data);
-    gradientCalc->set_memory(mem + 3 * n);
-    // memory=2*n[xp,gp]
-    linearSearch = new LinearSearch(gradientCalc);
-    linearSearch->set_memory(mem + 3*n + numData, mem + 3*n + numData + n);
-    s = mem + 3*n + numData + 2*n; //new double[n*m];
-    y = s + n*m; //new double[n*m];
-    rho = s + 2*n*m; //new double[m];
-    alpha = s + 2*n*m + m; //new double[m];
-}
 void LBFGS::set_parameter(const OptimizePara& optPara){
     Optimizer::set_parameter(optPara);
     m = optPara.BFGS_m;

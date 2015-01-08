@@ -28,6 +28,7 @@ class HessianVecProduct : public MatVecProduct {
         return sampleSize;
     }
     void next_sample();
+    virtual ~HessianVecProduct(){};
     static void unittest(GradientCalc *gradientCalc);
 };
 #endif

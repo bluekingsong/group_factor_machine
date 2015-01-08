@@ -7,10 +7,11 @@
 class LBFGS : public Optimizer{
   public:
     LBFGS(){
+        init();
         optAlgoName = "LBFGS";
     };
+    virtual void init(){ Optimizer::init(); s = y = rho = alpha = 0;  } //TODO
     virtual void optimize();
-    virtual void prepare_optimize(const Problem* data);
     virtual void prepare_optimize(GradientCalc*,const Real*);
     virtual void set_parameter(const OptimizePara& optPara);
     virtual std::string report_algo_para()const;

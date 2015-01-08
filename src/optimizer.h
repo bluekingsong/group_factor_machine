@@ -7,9 +7,14 @@
 #include "linear_search.h"
 #include "gradient_calc.h"
 #include "cpp_common.h"
+#include "gflags/gflags.h"
+
+DECLARE_bool(fitIntercept);
+DECLARE_double(Intercept);
+DECLARE_double(l2);
 
 struct OptimizePara {
-    uint32_t maxIter;
+    uint64_t maxIter;
     double gNormKsi;
     double decRatio;  // (f - fNew)/f > decRatio
     double intercept;
@@ -29,8 +34,15 @@ struct OptimizePara {
 };
 class Optimizer {
   public:
+    virtual void init(){
+        gradientCalc = 0; 
+        linearSearch = 0;
+        w = g = d = 0;
+        funcVal = gNorm = 0;
+        numIter = numLS = numAccessData = 0;
+        beginTime = 0;
+    }
     virtual void optimize();
-    virtual void prepare_optimize(const Problem*)=0;
     virtual void prepare_optimize(GradientCalc*,const Real*)=0;
     virtual void post_optimize();
     virtual std::string report_algo_para()const=0;
@@ -41,6 +53,7 @@ class Optimizer {
     virtual double get_funcVal()const{
         return funcVal;
     }
+    virtual ~Optimizer(){};
   protected:
     OptimizePara optimizePara;
     GradientCalc *gradientCalc;
@@ -58,7 +71,7 @@ class Optimizer {
     time_t beginTime;
     std::string optAlgoName;
     // member functions
-    std::string make_monitor_str()const;
+    virtual std::string make_monitor_str()const;
     virtual bool check_stop_condition(double fNew);
     virtual void common_update(uint32_t dataAccessFactor);
 };

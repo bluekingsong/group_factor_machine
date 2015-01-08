@@ -8,6 +8,7 @@ class MatVecProduct{
   public:
     // description of A*x=y
     virtual void operator()(const Real *x,const uint32_t n,Real *y)const=0;
+    virtual ~MatVecProduct(){};
 };
 
 #endif

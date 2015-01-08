@@ -43,6 +43,7 @@ class LinearSearch{
         return numIter;
     }
     static void unittest(GradientCalc *gradientCalc);
+    virtual ~LinearSearch(){ };
   protected:
     uint32_t n;
     uint32_t numIter;

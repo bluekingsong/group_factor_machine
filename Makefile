@@ -1,10 +1,17 @@
-all: utest factor_machine
+all: fm1
 
-factor_machine: src/gradient_calc.cc src/dataset.cc  src/gfm_gradient_calc.cc src/group_factor_machine.cc src/gfm_train.cc src/auc.cc src/linear_search.cc src/optimizer.cc src/vec_op.cc src/conjugate_gradient.cc src/hessian_vec_product.cc src/config.h src/sample_lbfgs.cc src/lbfgs.cc  src/gradient_descent.cc src/cpp_common.cc
+INC=-Isrc -I/home/lanjinsong/common/gflags-2.0/include
+LIB=-L/home/lanjinsong/common/gflags-2.0/lib/ -lgflags
+cc=/usr/bin/g++ -Wall -g -O3
+
+fm1: src/gradient_calc.cc src/dataset.cc  src/gfm_gradient_calc.cc src/group_factor_machine.cc src/gfm_train.cc src/auc.cc src/linear_search.cc src/optimizer.cc src/vec_op.cc src/config.h src/lbfgs.cc  src/gradient_descent.cc src/cpp_common.cc src/online_optimizer.cc 
+	${cc} -o factor_machine src/gradient_calc.cc src/dataset.cc  src/gfm_gradient_calc.cc src/group_factor_machine.cc src/gfm_train.cc src/auc.cc src/linear_search.cc src/optimizer.cc src/vec_op.cc src/config.h src/lbfgs.cc  src/gradient_descent.cc src/cpp_common.cc src/online_optimizer.cc ${INC} ${LIB}
+
+fm: src/gradient_calc.cc src/dataset.cc  src/gfm_gradient_calc.cc src/group_factor_machine.cc src/gfm_train.cc src/auc.cc src/linear_search.cc src/optimizer.cc src/vec_op.cc src/conjugate_gradient.cc src/hessian_vec_product.cc src/config.h src/sample_lbfgs.cc src/lbfgs.cc  src/gradient_descent.cc src/cpp_common.cc
 	/usr/bin/g++ -O3 src/dataset.cc src/gradient_calc.cc src/gfm_gradient_calc.cc src/group_factor_machine.cc src/gfm_train.cc src/auc.cc src/linear_search.cc src/optimizer.cc src/vec_op.cc src/conjugate_gradient.cc src/hessian_vec_product.cc src/config.h src/sample_lbfgs.cc src/lbfgs.cc  src/gradient_descent.cc src/cpp_common.cc -Isrc -o factor_machine
 
 utest: src/dataset.cc  src/unittest.cc src/cpp_common.cc src/gfm_gradient_calc.cc src/vec_op.cc src/gradient_calc.cc src/auc.cc
-	/usr/bin/g++  -g src/dataset.cc  src/unittest.cc src/cpp_common.cc src/gfm_gradient_calc.cc src/vec_op.cc src/gradient_calc.cc src/auc.cc -Isrc -o utest
+	${cc} -o utest  src/dataset.cc  src/unittest.cc src/cpp_common.cc src/gfm_gradient_calc.cc src/vec_op.cc src/gradient_calc.cc src/auc.cc ${INC} ${LIB}
 
 clean:
 	rm -f utest factor_machine

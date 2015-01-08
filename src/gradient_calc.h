@@ -1,5 +1,7 @@
 #ifndef _GRADIENT_CALC_H
 #define _GRADIENT_CALC_H
+#include <map>
+#include <vector>
 #include "dataset.h"
 #include "auc.h"
 
@@ -15,10 +17,12 @@ class GradientCalc {
     double intercept;
     bool fitIntercept;  // if fitIntercept = true, then the w[data.n] is the intercept
     double l2;
-    uint32_t sampleSize;
-    uint32_t sampleIndex;
+    uint64_t sampleSize;
+    uint64_t sampleIndex;
     bool sampleEnabled; // is in sample mode ?
     AucUti aucUti;
+    double logloss;
+    double l2loss;
   public:
     GradientCalc(const Problem* _data,double _intercept = 0) : data(_data),intercept(_intercept){
         l2 = 0;
@@ -26,6 +30,7 @@ class GradientCalc {
         sampleSize = _data->l;
         sampleIndex = 0;
         sampleEnabled= false;
+        predictedProb = 0;
     }
     virtual uint32_t get_parameter_size()const{
         return data->get_feature_num();
@@ -33,9 +38,15 @@ class GradientCalc {
     virtual uint32_t get_instance_num()const{
         return data->get_instance_num();
     }
+    AucUti& get_auc_uti() {    return aucUti; };
+    double get_logloss()const{    return logloss;   }
+    void reset_loss(){    logloss = l2loss ; }
+    double get_l2loss()const{    return l2loss;    }
+    void reset_sample_index(){    sampleIndex = 0;   }
     void next_sample(){
         sampleIndex = (sampleIndex + sampleSize) % data->l;
     }
+    uint64_t get_sample_size()const{    return sampleSize;    };
     void set_sample_enabled(bool flag){
         sampleEnabled = flag;
     }
@@ -72,6 +83,8 @@ class GradientCalc {
         return data->x[index];
     }
     virtual double operator()(const Real *w, Real * g);
+    virtual double operator()(const Real *w, std::vector<uint32_t>& g_index, double& g_val){  return 0; };
+    virtual double operator()(const Real *w, std::map<uint32_t,double>& g_dict);
     double get_prediction(uint32_t index)const{
        return predictedProb[index];
     };
@@ -84,6 +97,7 @@ class GradientCalc {
     const Problem* get_data()const{
         return data;
     }
+    virtual ~GradientCalc(){};
     static GradientCalc* unittest(const Problem* _data);
 };
 #endif

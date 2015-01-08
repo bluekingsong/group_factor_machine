@@ -31,7 +31,7 @@ std::string StringFunction::join(const std::vector<std::string>& strs,char sep){
     }
     std::string sep_str(1,sep);
     std::string result;
-    for(int i=0;i<strs.size()-1;i++){
+    for(size_t i=0;i<strs.size()-1;i++){
         result+=strs[i]+sep_str;
     }
     return result+=strs.back();
@@ -51,7 +51,7 @@ bool IndexAdapter::InitFromFile(const std::string& file_name,unsigned int index_
     std::string line;
     std::vector<std::string> line_vec;
     while(std::getline(fin,line)){
-        int n=StringFunction::split(line,spliter,line_vec);
+        size_t n=StringFunction::split(line,spliter,line_vec);
         if(index_of_key>=n){
             std::cerr<<"WARNING:broken line,index of key out of line items"<<std::endl;
         }else{

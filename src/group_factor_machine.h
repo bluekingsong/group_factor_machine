@@ -2,8 +2,18 @@
 #define _GROUP_FACTOR_MACHINE_H
 #include <vector>
 #include "dataset.h"
+#include "gflags/gflags.h"
+
 typedef double Real;
-typedef unsigned int uint32_t;
+DECLARE_double(epsilon);
+DECLARE_double(intercept);
+DECLARE_uint64(groupMaxIter);
+DECLARE_string(optName);
+DECLARE_double(init_stdv);
+DECLARE_string(train_file);
+DECLARE_string(test_file);
+DECLARE_double(gropLambda);
+DECLARE_uint64(maxIter);
 
 class GroupFactorMachine {
   public:
@@ -11,7 +21,7 @@ class GroupFactorMachine {
         epsilon = 1e-8;
         intercept = 0;
     }
-    void set_dataset(const Problem * _data){
+    void set_dataset(Problem * _data){
         dataset = _data;
     }
     void set_test_dataset(const Problem * _data){
@@ -26,7 +36,7 @@ class GroupFactorMachine {
     void set_group_dimension(std::vector<uint32_t>& _groupDimension){
         groupDimension = _groupDimension;
     }
-    void train(const std::string& optimizerName,uint32_t groupMaxIter);
+    void train(const std::string& optimizerName = FLAGS_optName,uint64_t groupMaxIter = FLAGS_groupMaxIter);
     void set_intercept(double _intercept){
         intercept = _intercept;
     }
@@ -34,7 +44,7 @@ class GroupFactorMachine {
   private:
     double epsilon;
     double intercept;
-    const Problem *dataset;
+    Problem *dataset;
     const Problem *test_data;
     uint32_t latentSpaceDimension;
     std::vector<uint32_t> groupDimension;
